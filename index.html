@@ -472,6 +472,9 @@
     <p>© 2026 PURE CANDY CONFEITARIA • Qualidade, Carinho e Sabor</p>
   </footer>
 
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
     const WHATSAPP_EMPRESA = '5511999999999';
 
@@ -489,10 +492,24 @@
 
     let avaliacaoAtual = 0;
 
-    // CARREGAR AVALIAÇÕES SALVAS
-    document.addEventListener('DOMContentLoaded', () => {
-      const salvas = JSON.parse(localStorage.getItem('avaliacoesPureCandy')) || [];
-      salvas.forEach(av => adicionarAvaliacaoNaTela(av.estrelas, av.texto, false));
+    // ================= SUPABASE =================
+    const SUPABASE_URL = 'https://ihcgzpfmukywnjppvmvx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloY2d6cGZtdWt5d25qcHB2bXZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkxMDUwMzEsImV4cCI6MjA4NDY4MTAzMX0.dDL3ILkTmcJAK-5kgYkoTfxAWd6BVLFghV6nQ8bDj4A'
+    const mySupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // CARREGAR AVALIAÇÕES (PERMANENTES)
+    document.addEventListener('DOMContentLoaded', async () => {
+      const { data, error } = await mySupabase
+        .from('avaliacoes')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      data.forEach(av => adicionarAvaliacaoNaTela(av.estrelas, av.comentário, false));
     });
 
     function setRating(valor) {
@@ -502,20 +519,23 @@
       });
     }
 
-    function enviarAvaliacao() {
+    async function enviarAvaliacao() {
       if (avaliacaoAtual === 0) return alert('Selecione uma nota ⭐');
 
       const texto = document.getElementById('reviewText').value.trim();
       if (!texto) return alert('Escreva um comentário 😊');
 
-      const avaliacao = { estrelas: avaliacaoAtual, texto };
+      const { error } = await mySupabase
+        .from('avaliacoes')
+        .insert([{ estrelas: avaliacaoAtual, comentário: texto }]);
 
-      const armazenadas = JSON.parse(localStorage.getItem('avaliacoesPureCandy')) || [];
-      armazenadas.unshift(avaliacao);
-      localStorage.setItem('avaliacoesPureCandy', JSON.stringify(armazenadas));
+      if (error) {
+        alert('Erro ao enviar avaliação 😢');
+        console.error(error);
+        return;
+      }
 
       adicionarAvaliacaoNaTela(avaliacaoAtual, texto, true);
-
       document.getElementById('reviewText').value = '';
       setRating(0);
     }
@@ -535,6 +555,9 @@
 
 </body>
 </html>
+
+
+
 
 
 
