@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PURE CANDY | Cardápio Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rosa-claro: #f8cfd6;
+      --vermelho: #b52a3a;
+      --vermelho-escuro: #8f1f2c;
+      --marrom: #6b3f2a;
+      --branco: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      /* FUNDO ORIGINAL DE GRANULADOS (imagem enviada) integrado à paleta */
+      background:
+        linear-gradient(rgba(248,207,214,0.88), rgba(248,207,214,0.88)),
+        url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnIAAAFLCAIAAADd0fY6AAAQAElEQVR4AZT9d9BtR5IfiGVm1THXff55h/fgvetGo+00h+QMucvl") ;
+      background-size: cover;
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-color: var(--rosa-claro);
+      color: var(--marrom);
+    }
+
+    header {
+      position: relative;
+      z-index: 1000;
+      background: var(--branco);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 40px 32px 64px 200px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    header img {
+      position: absolute;
+      left: 24px;
+      bottom: -80px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--branco);
+      padding: 8px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+      transition: transform 0.5s ease, box-shadow 0.5s ease, filter 0.5s ease;
+      cursor: pointer;
+    }
+
+    header img:hover {
+      transform: translateY(-6px) scale(1.05) rotate(-2deg);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+      filter: brightness(1.05);
+    }
+
+    header img:active {
+      transform: translateY(-2px) scale(0.98);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--vermelho);
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 20px;
+      background: rgba(181,42,58,0.08);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+
+    nav a:hover {
+      background: var(--vermelho);
+      color: var(--branco);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    }
+
+    .hero {
+      margin-top: 45px;
+      text-align: center;
+      padding: 36px 20px;
+    }
+
+    .hero h1 {
+      color: var(--vermelho);
+      font-size: 2.5rem;
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin: 16px auto 0;
+      font-size: 1.1rem;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      padding: 20px 20px 40px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .category-title {
+      grid-column: 1 / -1;
+      font-size: 1.8rem;
+      color: var(--vermelho);
+      text-align: center;
+      margin: 20px 0 10px;
+      font-weight: 700;
+    }
+
+    .card {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    .card h3 {
+      color: var(--vermelho);
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      font-weight: 700;
+      color: var(--vermelho-escuro);
+      font-size: 1.1rem;
+    }
+
+    .floating-menu {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--vermelho);
+      color: var(--branco);
+      padding: 14px 20px;
+      border-radius: 30px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    footer {
+      background: var(--vermelho-escuro);
+      color: var(--branco);
+      text-align: center;
+      padding: 24px 16px;
+      margin-top: 40px;
+    }
+
+    footer p {
+      font-size: 0.9rem;
+    }
+
+    .order-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .order-box {
+      background: var(--branco);
+      padding: 28px;
+      border-radius: 18px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      text-align: center;
+      animation: scaleIn 0.3s ease;
+    }
+
+    .order-box h2 {
+      color: var(--vermelho);
+      margin-bottom: 16px;
+    }
+
+    .order-box input,
+    .order-box select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 0.95rem;
+    }
+
+    .order-box button {
+      width: 100%;
+      padding: 14px;
+      background: var(--vermelho);
+      color: var(--branco);
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .order-box button:hover {
+      background: var(--vermelho-escuro);
+    }
+
+    .close {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: var(--marrom);
+      cursor: pointer;
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .contact-buttons a {
+      display: block;
+      margin: 10px 0;
+      padding: 14px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--branco);
+    }
+
+    .btn-whatsapp { background: #25D366; }
+    .btn-instagram {
+      background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+      display: block;
+      margin: 10px 0;
+      padding: 14px;
+      border-radius: 30px;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* INTERAÇÃO IGUAL AOS MENUS */
+    .contact-buttons a {
+      transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+    }
+
+    .contact-buttons a:hover,
+    .btn-instagram:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+      filter: brightness(1.05);
+    }
+    .btn-location { background: var(--vermelho); }
+
+    .stars {
+      display: flex;
+      gap: 6px;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #e2b8be;
+    }
+
+    .stars span:hover,
+    .stars span.active {
+      color: var(--vermelho);
+    }
+
+    #listaAvaliacoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  width: 100%;
+  margin-top: 30px;
+}
+
+#listaAvaliacoes .card {
+  margin-top: 0;
+}
+
+    #listaAvaliacoes .rating {
+      color: var(--vermelho);
+      margin-bottom: 6px;
+    }
+
+    #avaliacoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#avaliacoes button {
+      background: var(--vermelho);
+      color: var(--branco);
+      border: none;
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* FIXAR TAMANHO DO CAMPO DE COMENTÁRIO */
+    #avaliacoes textarea {
+      resize: none;
+      height: 90px;
+      max-height: 90px;
+      min-height: 90px;
+      overflow-y: auto;
+    }
+
+    #avaliacoes button:hover {
+      background: var(--vermelho-escuro);
+    }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://i.imgur.com/u6OM1MU.jpeg" alt="Logo Pure Candy">
+    <nav>
+      <a href="#">Início</a>
+      <a href="#menu">Cardápio</a>
+      <a href="javascript:void(0)" onclick="openContact()">Contato</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>PURE CANDY</h1>
+    <p>Bolinhos de pote artesanais feitos com amor, qualidade e ingredientes selecionados. Uma experiência doce e inesquecível.</p>
+  </section>
+
+  <section class="menu" id="menu">
+    <h2 class="category-title">BOLINHOS DE POTE</h2>
+    <div class="card">
+      <h3>Chocolate Branco</h3>
+      <p>Bolo branco com nutella, brigadeiro e morango.</p>
+      <div class="price">R$ 20,00</div>
+    </div>
+
+    <div class="card">
+      <h3>Ninho com Nutella</h3>
+      <p>Bolo branco macio com creme de leite Ninho e Nutella.</p>
+      <div class="price">R$ 22,00</div>
+    </div>
+
+    <div class="card">
+      <h3>Brigadeiro Tradicional</h3>
+      <p>Bolo de chocolate com brigadeiro tradicional e brigadeiro de ninho.</p>
+      <div class="price">R$ 20,00</div>
+    </div>
+  </section>
+
+  <section class="menu">
+    <h2 class="category-title">COPO DA FELICIDADE</h2>
+
+    <div class="card">
+      <h3>Brigadeiro Tradicional com Uva</h3>
+      <p>Brigadeiro tradicional cremoso com uvas frescas.</p>
+      <div class="price">200ml • R$ 15,00<br>300ml • R$ 18,00</div>
+    </div>
+
+    <div class="card">
+      <h3>Brigadeiro Tradicional com Morango</h3>
+      <p>Brigadeiro tradicional com morangos selecionados.</p>
+      <div class="price">200ml • R$ 15,00<br>300ml • R$ 18,00</div>
+    </div>
+
+    <div class="card">
+      <h3>Brigadeiro de Ninho com Morango</h3>
+      <p>Brigadeiro de leite Ninho com morangos frescos.</p>
+      <div class="price">200ml • R$ 15,00<br>300ml • R$ 18,00</div>
+    </div>
+
+    <div class="card">
+      <h3>Brigadeiro de Ninho com Uva</h3>
+      <p>Brigadeiro de leite Ninho com uvas frescas.</p>
+      <div class="price">200ml • R$ 15,00<br>300ml • R$ 18,00</div>
+    </div>
+
+    <div class="card">
+      <h3>Brigadeiro Tradicional + Nutella + Morango e Uva</h3>
+      <p>Brigadeiro tradicional com Nutella e combinação de morango e uva.<br><strong>Opções:</strong> Morango e Uva • Apenas Morango • Apenas Uva</p>
+      <div class="price">200ml • R$ 15,00<br>300ml • R$ 18,00</div>
+    </div>
+
+    <div class="card">
+      <h3>Brigadeiro de Ninho + Nutella + Morango e Uva</h3>
+      <p>Brigadeiro de leite Ninho com Nutella e combinação de morango e uva.<br><strong>Opções:</strong> Morango e Uva • Apenas Morango • Apenas Uva</p>
+      <div class="price">200ml • R$ 15,00<br>300ml • R$ 18,00</div>
+    </div>
+  </section>
+
+  <!-- AVALIAÇÕES -->
+  <section class="menu" id="avaliacoes">
+    <h2 class="category-title">Avaliações dos Clientes</h2>
+
+    <div class="card">
+      <h3 style="margin-bottom:12px">Deixe sua avaliação</h3>
+
+      <div class="stars" data-rating="0">
+        <span onclick="setRating(1)">★</span>
+        <span onclick="setRating(2)">★</span>
+        <span onclick="setRating(3)">★</span>
+        <span onclick="setRating(4)">★</span>
+        <span onclick="setRating(5)">★</span>
+      </div>
+
+      <textarea id="reviewText" placeholder="Escreva seu comentário..." rows="3" style="width:100%;margin-top:14px;padding:12px;border-radius:10px;border:1px solid #ddd;font-family:'Poppins',sans-serif"></textarea>
+
+      <button onclick="enviarAvaliacao()" style="margin-top:14px">Enviar Avaliação</button>
+    </div>
+
+    <div id="listaAvaliacoes"></div>
+  </section>
+
+  
+
+  
+
+  
+
+  <!-- MODAL CONTATO -->
+<div class="order-modal" id="contactModal">
+  <div class="order-box">
+    <h2 style="color:#b52a3a">Fale com a gente ✨💖</h2>
+    <p style="margin-bottom:20px">Estamos prontas pra adoçar seu dia!</p>
+
+    <div class="contact-buttons">
+      <a class="btn-whatsapp" href="https://wa.me/554899568195" target="_blank">
+        📱 WhatsApp<br><strong>(48) 9956-8195</strong>
+      </a>
+
+      <a class="btn-instagram" href="https://instagram.com/purecandyy" target="_blank">
+        📸 Instagram<br><strong>@purecandyy</strong>
+      </a>
+    </div>
+
+    <span class="close" onclick="closeContact()">Fechar</span>
+  </div>
+</div>
+
+<footer>
+    <p>© 2026 PURE CANDY • Qualidade, Carinho e Sabor</p>
+  </footer>
+
+  <script>
+    const WHATSAPP_EMPRESA = '5511999999999';
+
+    
+    
+    
+    
+    function openContact() {
+      document.getElementById('contactModal').style.display = 'flex';
+    }
+
+    function closeContact() {
+      document.getElementById('contactModal').style.display = 'none';
+    }
+
+    let avaliacaoAtual = 0;
+
+    // CARREGAR AVALIAÇÕES SALVAS
+    document.addEventListener('DOMContentLoaded', () => {
+      const salvas = JSON.parse(localStorage.getItem('avaliacoesPureCandy')) || [];
+      salvas.forEach(av => adicionarAvaliacaoNaTela(av.estrelas, av.texto, false));
+    });
+
+    function setRating(valor) {
+      avaliacaoAtual = valor;
+      document.querySelectorAll('.stars span').forEach((star, index) => {
+        star.classList.toggle('active', index < valor);
+      });
+    }
+
+    function enviarAvaliacao() {
+      if (avaliacaoAtual === 0) return alert('Selecione uma nota ⭐');
+
+      const texto = document.getElementById('reviewText').value.trim();
+      if (!texto) return alert('Escreva um comentário 😊');
+
+      const avaliacao = { estrelas: avaliacaoAtual, texto };
+
+      const armazenadas = JSON.parse(localStorage.getItem('avaliacoesPureCandy')) || [];
+      armazenadas.unshift(avaliacao);
+      localStorage.setItem('avaliacoesPureCandy', JSON.stringify(armazenadas));
+
+      adicionarAvaliacaoNaTela(avaliacaoAtual, texto, true);
+
+      document.getElementById('reviewText').value = '';
+      setRating(0);
+    }
+
+    function adicionarAvaliacaoNaTela(estrelas, texto, topo = true) {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <div class="rating">${'★'.repeat(estrelas)}</div>
+        <p>${texto}</p>
+      `;
+
+      const lista = document.getElementById('listaAvaliacoes');
+      topo ? lista.prepend(div) : lista.appendChild(div);
+    }
+  </script>
+
+</body>
+</html>
+
+
