@@ -388,12 +388,71 @@
       border-radius: 12px;
     }
 
-    /* CTA WhatsApp com micro-interação */
+    /* CTA WhatsApp com micro-interação (sem animação de cores) */
+    .cta-whatsapp {
+      display: inline-block;
+      transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+    }
+
+    .cta-whatsapp:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+      filter: brightness(1.08);
+    }
+      12%  { background: #e7a6b4; } /* morango suave */
+      24%  { background: #f1c3a1; } /* pêssego */
+      36%  { background: #e0b58c; } /* doce de leite */
+      48%  { background: #cfa07c; } /* caramelo */
+      60%  { background: #b97a5f; } /* chocolate ao leite */
+      72%  { background: #a96b78; } /* frutas vermelhas */
+      84%  { background: var(--vermelho-escuro); }
+      100% { background: var(--vermelho); }
+    }
+      16% {
+        background: #e6a1ad; /* rosa pastel */
+      }
+      32% {
+        background: #d9b38c; /* doce de leite */
+      }
+      48% {
+        background: #c97c7c; /* goiaba suave */
+      }
+      64% {
+        background: #b86b4b; /* caramelo queimado */
+      }
+      80% {
+        background: var(--vermelho-escuro); /* profundidade */
+      }
+      100% {
+        background: var(--vermelho); /* volta à marca */
+      }
+    }
+      25% {
+        background: #f3a1b3; /* rosa confeitaria */
+      }
+      50% {
+        background: #d48a55; /* caramelo doce */
+      }
+      75% {
+        background: var(--vermelho-escuro); /* profundidade */
+      }
+      100% {
+        background: var(--vermelho);
+      }
+    }
+
+
     .floating-menu {
       animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(181,42,58,0.6); }
+      70% { box-shadow: 0 0 0 14px rgba(181,42,58,0); }
+      100% { box-shadow: 0 0 0 0 rgba(181,42,58,0); }
+    }
+
+ {
       0% { box-shadow: 0 0 0 0 rgba(181,42,58,0.6); }
       70% { box-shadow: 0 0 0 14px rgba(181,42,58,0); }
       100% { box-shadow: 0 0 0 0 rgba(181,42,58,0); }
@@ -434,7 +493,7 @@
     <h1>PURE CANDY</h1>
     <p>Produção artesanal de sobremesas feitas com ingredientes selecionados, cuidado em cada detalhe e atendimento personalizado.</p>
     <div style="margin-top:28px">
-      <a href="javascript:void(0)" onclick="openContact()" style="background:var(--vermelho);color:#fff;padding:14px 32px;border-radius:30px;text-decoration:none;font-weight:600;box-shadow:0 6px 16px rgba(0,0,0,0.25)">Fazer pedido no WhatsApp 🍰</a>
+      <a href="javascript:void(0)" onclick="openContact()" class="cta-whatsapp" style="background:var(--vermelho);color:#fff;padding:14px 32px;border-radius:30px;text-decoration:none;font-weight:600;box-shadow:0 6px 16px rgba(0,0,0,0.25)">Fazer pedido no WhatsApp 🍰</a>
     </div>
 
     <!-- DIFERENCIAIS PURE CANDY -->
@@ -680,4 +739,3 @@
 
 </body>
 </html>
-
